@@ -268,7 +268,7 @@ public final class TypeSpec {
       for (Iterator<Map.Entry<String, TypeSpec>> i = enumConstants.entrySet().iterator();
           i.hasNext(); ) {
         Map.Entry<String, TypeSpec> enumConstant = i.next();
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         enumConstant.getValue().emit(codeWriter, enumConstant.getKey(), Collections.emptySet());
         firstMember = false;
         if (i.hasNext()) {
@@ -283,13 +283,13 @@ public final class TypeSpec {
       // Static fields.
       for (FieldSpec fieldSpec : fieldSpecs) {
         if (!fieldSpec.hasModifier(Modifier.STATIC)) continue;
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         fieldSpec.emit(codeWriter, kind.implicitFieldModifiers);
         firstMember = false;
       }
 
       if (!staticBlock.isEmpty()) {
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         codeWriter.emit(staticBlock);
         firstMember = false;
       }
@@ -297,14 +297,14 @@ public final class TypeSpec {
       // Non-static fields.
       for (FieldSpec fieldSpec : fieldSpecs) {
         if (fieldSpec.hasModifier(Modifier.STATIC)) continue;
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         fieldSpec.emit(codeWriter, kind.implicitFieldModifiers);
         firstMember = false;
       }
 
       // Initializer block.
       if (!initializerBlock.isEmpty()) {
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         codeWriter.emit(initializerBlock);
         firstMember = false;
       }
@@ -312,7 +312,7 @@ public final class TypeSpec {
       // Constructors.
       for (MethodSpec methodSpec : methodSpecs) {
         if (!methodSpec.isConstructor()) continue;
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         methodSpec.emit(codeWriter, name, kind.implicitMethodModifiers);
         firstMember = false;
       }
@@ -320,14 +320,14 @@ public final class TypeSpec {
       // Methods (static and non-static).
       for (MethodSpec methodSpec : methodSpecs) {
         if (methodSpec.isConstructor()) continue;
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         methodSpec.emit(codeWriter, name, kind.implicitMethodModifiers);
         firstMember = false;
       }
 
       // Types.
       for (TypeSpec typeSpec : typeSpecs) {
-        if (!firstMember) codeWriter.emit("\n");
+        if (!firstMember) codeWriter.emitFirstMemberSeparator();
         typeSpec.emit(codeWriter, null, kind.implicitTypeModifiers);
         firstMember = false;
       }
