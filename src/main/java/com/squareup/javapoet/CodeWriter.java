@@ -46,7 +46,7 @@ final class CodeWriter {
   private static final String NO_PACKAGE = new String();
   private static final Pattern LINE_BREAKING_PATTERN = Pattern.compile("\\R");
 
-  private final String indent;
+  private final Formatting formatting;
   private final LineWrapper out;
   private int indentLevel;
 
@@ -71,20 +71,20 @@ final class CodeWriter {
   int statementLine = -1;
 
   CodeWriter(Appendable out) {
-    this(out, "  ", Collections.emptySet(), Collections.emptySet());
+    this(out, Formatting.DEFAULT, Collections.emptySet(), Collections.emptySet());
   }
 
-  CodeWriter(Appendable out, String indent, Set<String> staticImports, Set<String> alwaysQualify) {
-    this(out, indent, Collections.emptyMap(), staticImports, alwaysQualify);
+  CodeWriter(Appendable out, Formatting formatting, Set<String> staticImports, Set<String> alwaysQualify) {
+    this(out, formatting, Collections.emptyMap(), staticImports, alwaysQualify);
   }
 
   CodeWriter(Appendable out,
-      String indent,
+      Formatting formatting,
       Map<String, ClassName> importedTypes,
       Set<String> staticImports,
       Set<String> alwaysQualify) {
-    this.out = new LineWrapper(out, indent, 100);
-    this.indent = checkNotNull(indent, "indent == null");
+    this.formatting = checkNotNull(formatting, "formatting == null");
+    this.out = new LineWrapper(out, formatting.indent(), 100);
     this.importedTypes = checkNotNull(importedTypes, "importedTypes == null");
     this.staticImports = checkNotNull(staticImports, "staticImports == null");
     this.alwaysQualify = checkNotNull(alwaysQualify, "alwaysQualify == null");
@@ -248,7 +248,7 @@ final class CodeWriter {
           String string = (String) codeBlock.args.get(a++);
           // Emit null as a literal null: no quotes.
           emitAndIndent(string != null
-              ? stringLiteralWithDoubleQuotes(string, indent)
+              ? stringLiteralWithDoubleQuotes(string, formatting.indent())
               : "null");
           break;
 
@@ -509,7 +509,7 @@ final class CodeWriter {
 
   private void emitIndentation() throws IOException {
     for (int j = 0; j < indentLevel; j++) {
-      out.append(indent);
+      out.append(formatting.indent());
     }
   }
 

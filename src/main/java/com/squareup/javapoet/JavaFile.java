@@ -62,7 +62,7 @@ public final class JavaFile {
   public final boolean skipJavaLangImports;
   private final Set<String> staticImports;
   private final Set<String> alwaysQualify;
-  private final String indent;
+  private final Formatting formatting;
 
   private JavaFile(Builder builder) {
     this.fileComment = builder.fileComment.build();
@@ -70,7 +70,7 @@ public final class JavaFile {
     this.typeSpec = builder.typeSpec;
     this.skipJavaLangImports = builder.skipJavaLangImports;
     this.staticImports = Util.immutableSet(builder.staticImports);
-    this.indent = builder.indent;
+    this.formatting = builder.formatting;
 
     Set<String> alwaysQualifiedNames = new LinkedHashSet<>();
     fillAlwaysQualifiedNames(builder.typeSpec, alwaysQualifiedNames);
@@ -88,7 +88,7 @@ public final class JavaFile {
     // First pass: emit the entire class, just to collect the types we'll need to import.
     CodeWriter importsCollector = new CodeWriter(
         NULL_APPENDABLE,
-        indent,
+        formatting,
         staticImports,
         alwaysQualify
     );
@@ -97,7 +97,7 @@ public final class JavaFile {
 
     // Second pass: write the code, taking advantage of the imports.
     CodeWriter codeWriter
-        = new CodeWriter(out, indent, suggestedImports, staticImports, alwaysQualify);
+        = new CodeWriter(out, formatting, suggestedImports, staticImports, alwaysQualify);
     emit(codeWriter);
   }
 
@@ -269,7 +269,7 @@ public final class JavaFile {
     Builder builder = new Builder(packageName, typeSpec);
     builder.fileComment.add(fileComment);
     builder.skipJavaLangImports = skipJavaLangImports;
-    builder.indent = indent;
+    builder.formatting = formatting;
     return builder;
   }
 
@@ -278,7 +278,7 @@ public final class JavaFile {
     private final TypeSpec typeSpec;
     private final CodeBlock.Builder fileComment = CodeBlock.builder();
     private boolean skipJavaLangImports;
-    private String indent = "  ";
+    private Formatting formatting = Formatting.DEFAULT;
 
     public final Set<String> staticImports = new TreeSet<>();
 
@@ -325,7 +325,7 @@ public final class JavaFile {
     }
 
     public Builder indent(String indent) {
-      this.indent = indent;
+      this.formatting = formatting.toBuilder().indent(indent).build();
       return this;
     }
 
