@@ -217,10 +217,6 @@ final class CodeWriter {
     typeVariables.forEach(typeVariable -> currentTypeVariables.remove(typeVariable.name));
   }
 
-  CodeWriter emitFirstMemberSeparator() throws IOException {
-    return emit(formatting.firstMemberSeparator());
-  }
-
   public CodeWriter emit(String s) throws IOException {
     return emitAndIndent(s);
   }

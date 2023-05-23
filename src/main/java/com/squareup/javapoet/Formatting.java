@@ -21,45 +21,32 @@ public final class Formatting {
   public static final Formatting DEFAULT = builder().build();
 
   private final String indent;
-  private final boolean separateFirstMember;
 
   private Formatting(Builder builder) {
     this.indent = builder.indent;
-    this.separateFirstMember = builder.separateFirstMember;
   }
 
   String indent() {
     return this.indent;
   }
 
-  String firstMemberSeparator() {
-    return (this.separateFirstMember) ? "\n\n" : "\n";
-  }
-
   public Builder toBuilder() {
-    return new Builder(indent, separateFirstMember);
+    return new Builder(indent);
   }
 
   public static Builder builder() {
-    return new Builder("  ", false);
+    return new Builder("  ");
   }
 
   public static final class Builder {
     private String indent;
-    private boolean separateFirstMember;
 
-    private Builder(String indent, boolean separateFirstMember) {
+    private Builder(String indent) {
       this.indent = indent;
-      this.separateFirstMember = separateFirstMember;
     }
 
     public Builder indent(String indent) {
       this.indent =  indent;
-      return this;
-    }
-
-    public Builder separateFirstMember(boolean separateFirstMember) {
-      this.separateFirstMember = separateFirstMember;
       return this;
     }
 
