@@ -46,7 +46,7 @@ final class CodeWriter {
   private static final String NO_PACKAGE = new String();
   private static final Pattern LINE_BREAKING_PATTERN = Pattern.compile("\\R");
 
-  private final Formatting formatting;
+  final Formatting formatting;
   private final LineWrapper out;
   private int indentLevel;
 
@@ -84,7 +84,7 @@ final class CodeWriter {
       Set<String> staticImports,
       Set<String> alwaysQualify) {
     this.formatting = checkNotNull(formatting, "formatting == null");
-    this.out = new LineWrapper(out, formatting.indent(), 100);
+    this.out = new LineWrapper(out, formatting.indent, 100);
     this.importedTypes = checkNotNull(importedTypes, "importedTypes == null");
     this.staticImports = checkNotNull(staticImports, "staticImports == null");
     this.alwaysQualify = checkNotNull(alwaysQualify, "alwaysQualify == null");
@@ -248,7 +248,7 @@ final class CodeWriter {
           String string = (String) codeBlock.args.get(a++);
           // Emit null as a literal null: no quotes.
           emitAndIndent(string != null
-              ? stringLiteralWithDoubleQuotes(string, formatting.indent())
+              ? stringLiteralWithDoubleQuotes(string, formatting.indent)
               : "null");
           break;
 
@@ -509,7 +509,7 @@ final class CodeWriter {
 
   private void emitIndentation() throws IOException {
     for (int j = 0; j < indentLevel; j++) {
-      out.append(formatting.indent());
+      out.append(formatting.indent);
     }
   }
 

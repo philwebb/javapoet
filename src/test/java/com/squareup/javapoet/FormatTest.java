@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.squareup.javapoet.TypeSpec.Builder;
-
 @RunWith(JUnit4.class)
 public class FormatTest {
 
@@ -26,10 +24,9 @@ public class FormatTest {
     typeSpec.addMethod(MethodSpec.methodBuilder("toString").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
         .returns(String.class).addCode("return FOO;\n").build());
     TypeSpec taco = typeSpec.build();
-    StringBuilder out = new StringBuilder();
-    CodeWriter codeWriter = new CodeWriter(out, Formatting.DEFAULT, Collections.emptySet(), Collections.emptySet());
+    Formatting formatting = Formatting.builder().separateFirstMember(true).build();
+    CodeWriter codeWriter = new CodeWriter(System.out, formatting, Collections.emptySet(), Collections.emptySet());
     taco.emit(codeWriter, null, Collections.emptySet());
-    System.out.println(out.toString());
   }
 
 }
